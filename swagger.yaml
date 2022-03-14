@@ -151,13 +151,5 @@ components:
         name:
           type: string
         data:
-          type: object
-        listCount:
-          type: integer
-          format: int32
-          readOnly: true
-        findCount:
-          type: integer
-          readOnly: true
-          format: int32
+          type: string
 
