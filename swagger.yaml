@@ -1,0 +1,155 @@
+openapi: 3.0.3
+info:
+  version: 1.0.0
+  title: OData mock server
+
+paths:
+  /v1/system/ping:
+    get:
+      operationId: ping
+      summary: Replies with pong
+      description: Replies ping with pong
+      tags:
+        - System
+      responses:
+        "200":
+          description: Pong
+          content:
+            text/plain:
+              schema:
+                type: string
+
+  /v1/entries:
+    post:
+      operationId: createEntry
+      summary: Create entry
+      description: Creates new mocked data entry
+      tags:
+        - Entries
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Entry"
+        description: Payload
+        required: true
+      responses:
+        "200":
+          description: Entry
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Entry"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      operationId: deleteEntries
+      summary: Delete mocked entries
+      description: Deletes mocked entries
+      tags:
+        - Entries
+      parameters:
+        - name: name
+          in: query
+          description: filter removal by name.
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Removed
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /v1/entries/{entryId}:
+    get:
+      operationId: findEntry
+      summary: Find mocked entries
+      description: Find mocked entries
+      tags:
+        - Entries
+      parameters:
+        - name: entryId
+          in: path
+          description: entry id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Entry
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Entry"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      operationId: deleteEntry
+      summary: Delete mocked entries
+      description: Deletes mocked entries
+      tags:
+        - Entries
+      parameters:
+        - name: entryId
+          in: path
+          description: entry id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: Removed
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    Error:
+      type: object
+      description: Error object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+
+    Entry:
+      type: object
+      description: Mocked entry
+      required:
+        - name
+        - data
+        - listCount
+        - findCount
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+        data:
+          type: string
+
